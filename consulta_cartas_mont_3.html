@@ -60,6 +60,8 @@
   .t-MTG { background: #d9770633; color: #f6ad55; }
   .t-OP  { background: #dc262633; color: #fc8181; }
   .t-PROD{ background: #05966933; color: #6ee7b7; }
+  .t-PKM { background: #ecc94b33; color: #f6e05e; }
+  .t-YUG { background: #9f7aea33; color: #d6bcfa; }
   .rows { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
   .row { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; background: #0f1319; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
   .badges { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -171,7 +173,7 @@ const fTipo=document.getElementById('fTipo'), fEdi=document.getElementById('fEdi
 const results=document.getElementById('results'), countEl=document.getElementById('count');
 const modal=document.getElementById('modal'), modalImg=document.getElementById('modalImg');
 
-const TIPO_NOME = { LOR:'Lorcana', MTG:'Magic', OP:'One Piece', PROD:'Produtos' };
+const TIPO_NOME = { LOR:'Lorcana', MTG:'Magic', OP:'One Piece', PROD:'Produtos', PKM:'Pokémon', YUG:'Yu-Gi-Oh' };
 
 function limpo(v){ v=(v==null?'':(''+v)).trim(); return (v==='' || v.toLowerCase()==='nan') ? '' : v; }
 function nomeCarta(d){ if(d.t==='PROD') return limpo(d.num) || limpo(d.ne) || '(sem nome)'; return limpo(d.n) || limpo(d.ne) || limpo(d.num) || '(sem nome)'; }
