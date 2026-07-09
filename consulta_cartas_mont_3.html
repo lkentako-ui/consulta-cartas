@@ -141,6 +141,13 @@ function imgUrls(d){
       urls.push('https://en.onepiece-cardgame.com/images/cardlist/card/'+base+'.png');
       urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/'+setc+'/'+base+'_EN.webp');
     }
+  } else if(d.t==='PKM'){
+    const set = (d.sig||'').toUpperCase();
+    const num = (d.num||'').toString().replace(/[^0-9]/g,'').padStart(3,'0');
+    if(set && num){
+      urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/'+set+'/'+set+'_'+num+'_EN.png');
+      urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/'+set+'/'+set+'_'+num+'_PT.png');
+    }
   }
   return urls;
 }
@@ -154,6 +161,8 @@ function ligaUrl(d){
   const q = encodeURIComponent(nome);
   if(d.t==='LOR') return 'https://www.ligalorcana.com.br/?view=cards/search&card='+q;
   if(d.t==='OP')  return 'https://www.ligaonepiece.com.br/?view=cards/search&card='+q;
+  if(d.t==='PKM') return 'https://www.ligapokemon.com.br/?view=cards/search&card='+q;
+  if(d.t==='YUG') return 'https://www.ligayugioh.com.br/?view=cards/search&card='+q;
   return 'https://www.ligamagic.com.br/?view=cards/search&card='+q;
 }
 
@@ -180,9 +189,22 @@ function loadThumb(el){
   const urls = JSON.parse(el.dataset.urls);
   const img = el.querySelector('img');
   const ph = el.querySelector('.ph');
+
+  // Yu-Gi-Oh: busca imagem via ygoprodeck API pelo nome EN
+  if(el.dataset.tipo === 'YUG' && el.dataset.cardname){
+    const nome = encodeURIComponent(el.dataset.cardname);
+    fetch('https://db.ygoprodeck.com/api/v7/cardinfo.php?name='+nome)
+      .then(r=>r.json())
+      .then(data=>{
+        const imgUrl = data?.data?.[0]?.card_images?.[0]?.image_url_small;
+        if(imgUrl){ img.src=imgUrl; img.onload=()=>{ img.style.display='block'; ph.style.display='none'; }; }
+      }).catch(()=>{});
+    return;
+  }
+
   let i=0;
   function tryNext(){
-    if(i>=urls.length){ return; } // deixa placeholder
+    if(i>=urls.length){ return; }
     img.onerror = ()=>{ i++; tryNext(); };
     img.onload = ()=>{ img.style.display='block'; ph.style.display='none'; };
     img.src = urls[i];
@@ -244,7 +266,7 @@ function render(){
         </div>
       </div>`).join('');
     return `<div class="card">
-      <div class="thumb" data-urls='${JSON.stringify(urls).replace(/'/g,"&#39;")}' data-liga="${ligaUrl(h)}" data-gi="${gi}" title="Clique para abrir na Liga">
+      <div class="thumb" data-urls='${JSON.stringify(urls).replace(/'/g,"&#39;")}' data-liga="${ligaUrl(h)}" data-gi="${gi}" data-tipo="${h.t}" data-cardname="${(h.ne||'').replace(/\s*\(#[^)]*\)\s*/g,'').trim()}" title="Clique para abrir na Liga">
         <img alt="">
         <div class="ph">ver na<br>Liga</div>
       </div>
