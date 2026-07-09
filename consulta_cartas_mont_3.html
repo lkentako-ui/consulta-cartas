@@ -126,11 +126,18 @@ function imgUrls(d){
     }
   } else if(d.t==='OP'){
     let code = (d.num||'').toString().toUpperCase();
-    const m = code.match(/([A-Z]{2,3}\d{1,2})-(\d{2,3})/); // OP13-007 / ST17-004 / EB01-001
+    const m = code.match(/([A-Z]{2,3}\d{1,2})-(\d{2,3})(-[A-Z]+)?/); // OP13-007 / OP13-007-AA / OP07-118-SP
     if(m){
-      const setc = m[1], cardn = m[2];
-      urls.push('https://en.onepiece-cardgame.com/images/cardlist/card/'+setc+'-'+cardn+'.png');
-      urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/'+setc+'/'+setc+'-'+cardn+'_EN.webp');
+      const setc = m[1], cardn = m[2], suf = m[3] || '';
+      const base = setc+'-'+cardn;
+      if(suf === '-AA' || suf === '-SP'){
+        // Arte alternativa: tenta Limitless com sufixo, depois oficial com _p1
+        urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/'+setc+'/'+base+suf+'_EN.webp');
+        urls.push('https://en.onepiece-cardgame.com/images/cardlist/card/'+base+'_p1.png');
+      }
+      // Fallback para arte normal
+      urls.push('https://en.onepiece-cardgame.com/images/cardlist/card/'+base+'.png');
+      urls.push('https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/'+setc+'/'+base+'_EN.webp');
     }
   }
   return urls;
