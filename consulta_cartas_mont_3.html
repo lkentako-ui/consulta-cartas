@@ -144,11 +144,14 @@ function imgUrls(d){
 }
 
 function ligaUrl(d){
+  if(d.t==='PROD'){
+    const nome = limpo(d.num) || limpo(d.ne) || '';
+    return 'https://www.ligamagic.com.br/?view=cards/search&card='+encodeURIComponent(nome);
+  }
   const nome = (d.ne || d.n || '').replace(/\s*\(#[^)]*\)\s*/g,'').trim();
   const q = encodeURIComponent(nome);
   if(d.t==='LOR') return 'https://www.ligalorcana.com.br/?view=cards/search&card='+q;
   if(d.t==='OP')  return 'https://www.ligaonepiece.com.br/?view=cards/search&card='+q;
-  // MTG e demais
   return 'https://www.ligamagic.com.br/?view=cards/search&card='+q;
 }
 
@@ -245,7 +248,7 @@ function render(){
         <div class="cardtop">
           <div>
             <div class="cname">${nomeCarta(h)}</div>
-            <div class="cedi">${h.t==='PROD' ? (limpo(h.ed)+(limpo(h.ne)?' &middot; Pedido #'+limpo(h.ne):'')) : (limpo(h.ed)+(limpo(h.sig)?' &middot; '+limpo(h.sig):'')+(limpo(h.num)?' &middot; #'+limpo(h.num):'')+(limpo(h.ne)&&limpo(h.ne)!==nomeCarta(h)?' &middot; '+limpo(h.ne):''))}</div>
+            <div class="cedi">${h.t==='PROD' ? limpo(h.ed) :(limpo(h.ed)+(limpo(h.sig)?' &middot; '+limpo(h.sig):'')+(limpo(h.num)?' &middot; #'+limpo(h.num):'')+(limpo(h.ne)&&limpo(h.ne)!==nomeCarta(h)?' &middot; '+limpo(h.ne):''))}</div>
           </div>
           <div style="text-align:right">
             <span class="tag t-${h.t}">${h.t}</span>
