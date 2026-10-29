@@ -231,7 +231,7 @@ function render(forceAll){
       </div>`).join('');
     const sub = isP ? esc(limpo(h.ed)) : esc(limpo(h.ed))+(limpo(h.sig)?' &middot; '+esc(limpo(h.sig)):'')+(limpo(h.num)?' &middot; #'+esc(limpo(h.num)):'')+(limpo(h.ne)&&limpo(h.ne)!==nomeCarta(h)?' &middot; '+esc(limpo(h.ne)):'');
     return `<div class="card">
-      ${isP?'':`<div class="thumb" data-urls="${esc(JSON.stringify(imgUrls(h)))}" data-liga="${esc(ligaUrl(h))}" title="Clique para abrir na Liga">
+      ${`<div class="thumb" data-urls="${esc(JSON.stringify(imgUrls(h)))}" data-liga="${esc(ligaUrl(h))}" title="Clique para abrir na Liga">
         <img alt="">
         <div class="ph">ver na<br>Liga</div>
       </div>`}
